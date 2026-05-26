@@ -1,0 +1,17 @@
+# Ignore documentation as requested
+docs/
+
+# Ignore STM32CubeIDE build outputs and user settings
+firmware/Debug/
+firmware/Release/
+firmware/STM32CubeIDE/.settings/
+firmware/STM32CubeIDE/Debug/
+firmware/STM32CubeIDE/Release/
+firmware/STM32CubeIDE/Application/User/Core/sysmem.su
+firmware/STM32CubeIDE/Application/User/Core/syscalls.su
+
+# OS and temporary files
+.DS_Store
+Thumbs.db
+*.log
+*.tmp
