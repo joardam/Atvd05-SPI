@@ -8,6 +8,14 @@ static void CS_High(MAX7219_HandleTypeDef *hmax) {
     HAL_GPIO_WritePin(hmax->cs_port, hmax->cs_pin, GPIO_PIN_SET);
 }
 
+static HAL_StatusTypeDef MAX7219_WriteReg_Blocking(MAX7219_HandleTypeDef *hmax, uint8_t reg, uint8_t data) {
+    uint8_t buffer[2] = {reg, data};
+    CS_Low(hmax);
+    HAL_StatusTypeDef status = HAL_SPI_Transmit(hmax->hspi, buffer, 2, HAL_MAX_DELAY);
+    CS_High(hmax);
+    return status;
+}
+
 HAL_StatusTypeDef MAX7219_Init(MAX7219_HandleTypeDef *hmax, SPI_HandleTypeDef *hspi, GPIO_TypeDef *cs_port, uint16_t cs_pin) {
     if (hmax == NULL || hspi == NULL || cs_port == NULL) {
         return HAL_ERROR;
@@ -22,13 +30,33 @@ HAL_StatusTypeDef MAX7219_Init(MAX7219_HandleTypeDef *hmax, SPI_HandleTypeDef *h
     // Ensure Chip Select starts high
     CS_High(hmax);
     
-    // In a full implementation, we initialize the registers of the MAX7219.
-    // For this stub, we return HAL_OK. In actual runtime, we would run:
-    // - Display Test: OFF (0x0F -> 0x00)
-    // - Scan Limit: All Digits 0-7 (0x0B -> 0x07)
-    // - Decode Mode: No decode (0x09 -> 0x00)
-    // - Intensity: Medium (0x0A -> 0x07)
-    // - Shutdown: Normal Operation (0x0C -> 0x01)
+    HAL_StatusTypeDef status;
+    
+    // Display Test: OFF (0x0F -> 0x00)
+    status = MAX7219_WriteReg_Blocking(hmax, MAX7219_REG_DISPLAY_TEST, 0x00);
+    if (status != HAL_OK) return status;
+    
+    // Scan Limit: All Digits 0-7 (0x0B -> 0x07)
+    status = MAX7219_WriteReg_Blocking(hmax, MAX7219_REG_SCAN_LIMIT, 0x07);
+    if (status != HAL_OK) return status;
+    
+    // Decode Mode: No decode (0x09 -> 0x00)
+    status = MAX7219_WriteReg_Blocking(hmax, MAX7219_REG_DECODE_MODE, 0x00);
+    if (status != HAL_OK) return status;
+    
+    // Intensity: Medium (0x0A -> 0x07)
+    status = MAX7219_WriteReg_Blocking(hmax, MAX7219_REG_INTENSITY, 0x07);
+    if (status != HAL_OK) return status;
+    
+    // Shutdown: Normal Operation (0x0C -> 0x01)
+    status = MAX7219_WriteReg_Blocking(hmax, MAX7219_REG_SHUTDOWN, 0x01);
+    if (status != HAL_OK) return status;
+    
+    // Clear all digits 1-8 to avoid garbage display
+    for (uint8_t i = 1; i <= 8; i++) {
+        status = MAX7219_WriteReg_Blocking(hmax, i, 0x00);
+        if (status != HAL_OK) return status;
+    }
     
     return HAL_OK;
 }

@@ -272,7 +272,7 @@ static void MX_SPI1_Init(void)
   hspi1.Instance = SPI1;
   hspi1.Init.Mode = SPI_MODE_MASTER;
   hspi1.Init.Direction = SPI_DIRECTION_2LINES_TXONLY;
-  hspi1.Init.DataSize = SPI_DATASIZE_4BIT;
+  hspi1.Init.DataSize = SPI_DATASIZE_8BIT;
   hspi1.Init.CLKPolarity = SPI_POLARITY_LOW;
   hspi1.Init.CLKPhase = SPI_PHASE_1EDGE;
   hspi1.Init.NSS = SPI_NSS_SOFT;
@@ -386,6 +386,7 @@ static void MX_GPIO_Init(void)
 #include "fonts.h"
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 void Process_Command(const char *cmd_str) {
     char tx_msg[64];
