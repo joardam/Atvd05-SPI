@@ -66,11 +66,10 @@ void Update_Display_State(void);
 /* USER CODE END EFP */
 
 /* Private defines -----------------------------------------------------------*/
-#define MAX7219_CS_Pin GPIO_PIN_0
-#define MAX7219_CS_GPIO_Port GPIOB
 
 /* USER CODE BEGIN Private defines */
-
+#define MAX7219_CS_Pin GPIO_PIN_0
+#define MAX7219_CS_GPIO_Port GPIOB
 /* USER CODE END Private defines */
 
 #ifdef __cplusplus
