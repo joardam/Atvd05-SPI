@@ -1,7 +1,7 @@
 #ifndef __PCF8591_H
 #define __PCF8591_H
 
-#include "stm32h7xx_hal.h"
+#include "stm32l4xx_hal.h"
 
 /* PCF8591 I2C Address (7-bit address 0x48, shifted left for HAL) */
 #define PCF8591_I2C_ADDR         (0x48 << 1)

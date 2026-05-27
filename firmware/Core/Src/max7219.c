@@ -129,8 +129,6 @@ void MAX7219_TxCpltCallback(MAX7219_HandleTypeDef *hmax) {
     
     // If it was a multi-line pattern write, continue with the remaining rows
     if (hmax->current_line > 0 && hmax->current_line < 8) {
-        // Wait a small delay or proceed immediately.
-        // Pulses on CS must occur between every register write.
         CS_Low(hmax);
         
         // Send next digit pair (index = current_line * 2)

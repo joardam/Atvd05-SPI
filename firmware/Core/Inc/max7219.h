@@ -1,7 +1,7 @@
 #ifndef __MAX7219_H
 #define __MAX7219_H
 
-#include "stm32h7xx_hal.h"
+#include "stm32l4xx_hal.h"
 
 /* MAX7219 Register Addresses */
 #define MAX7219_REG_NOP          0x00

@@ -8,7 +8,7 @@ HAL_StatusTypeDef PCF8591_Init(PCF8591_HandleTypeDef *hpcf, I2C_HandleTypeDef *h
     hpcf->state = PCF8591_STATE_READY;
     hpcf->control_reg = 0x00;
     
-    // Optional: Write initial zero value to DAC to turn it off or set default state
+
     return HAL_OK;
 }
 
@@ -26,10 +26,7 @@ HAL_StatusTypeDef PCF8591_ReadChannel_IT(PCF8591_HandleTypeDef *hpcf, uint8_t ch
     hpcf->control_reg = (hpcf->control_reg & PCF8591_CTRL_DAC_ENABLE) | (channel & 0x03);
     
     // First we write the control register to select the channel
-    // In a full implementation, we could do this via a sequential write-read,
-    // or by doing an IT transmit first, and in its callback initiating the IT receive.
-    // For this stub, we transmit the control byte (blocking or non-blocking) and read.
-    // Let's launch the transmit of the control byte.
+    // Then we launch the transmit of the control byte.
     HAL_StatusTypeDef status = HAL_I2C_Master_Transmit_IT(hpcf->hi2c, PCF8591_I2C_ADDR, &(hpcf->control_reg), 1);
     if (status != HAL_OK) {
         hpcf->state = PCF8591_STATE_READY;
@@ -84,7 +81,6 @@ void PCF8591_TxCpltCallback(PCF8591_HandleTypeDef *hpcf) {
     // If the Tx completed was the channel selection for a read,
     // we now must trigger the non-blocking read (receive) of the 2 bytes.
     if (hpcf->state == PCF8591_STATE_BUSY_RX) {
-        // Trigger read of 2 bytes from PCF8591
         HAL_I2C_Master_Receive_IT(hpcf->hi2c, PCF8591_I2C_ADDR, hpcf->rx_buffer, 2);
     } else {
         hpcf->state = PCF8591_STATE_READY;
